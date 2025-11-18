@@ -1,5 +1,61 @@
 // 1. Ambil elemen-elemen DOM
+// 1. Ambil elemen-elemen DOM
 const castButton = document.getElementById('cast-button');
+const statusDisplay = document.getElementById('status');
+const catchList = document.getElementById('catch-list');
+
+// 2. Daftar Ikan dan Peluang (Probabilitas)
+const fishData = [
+    { nama: "🐟 Ikan Teri", peluang: 0.40 }, 
+    { nama: "🐠 Ikan Mas", peluang: 0.30 },
+    { nama: "🐡 Ikan Buntal", peluang: 0.15 },
+    { nama: "🦈 Hiu Kecil", peluang: 0.05 },
+    { nama: "👞 Sepatu Bot Tua", peluang: 0.10 } // Zonk
+];
+
+// 3. Fungsi untuk menentukan hasil berdasarkan peluang
+function determineCatch() {
+    const randomValue = Math.random();
+    let cumulativeProbability = 0;
+
+    for (const fish of fishData) {
+        cumulativeProbability += fish.peluang;
+        if (randomValue <= cumulativeProbability) {
+            return fish;
+        }
+    }
+    return { nama: "❌ Tidak Ada Apa-apa", peluang: 0 };
+}
+
+// 4. Fungsi untuk menampilkan hasil tangkapan
+function addCatchToHistory(catchName) {
+    const listItem = document.createElement('li');
+    const time = new Date().toLocaleTimeString(); 
+    listItem.textContent = `[${time}] ${catchName}`; 
+    
+    catchList.prepend(listItem); 
+}
+
+// 5. Fungsi utama untuk memancing
+function startFishing() {
+    castButton.disabled = true;
+    statusDisplay.textContent = "⏳ Pancing dilempar... menunggu gigitan!";
+
+    const fishingTime = 3000; // Waktu tunggu 3 detik
+
+    setTimeout(() => {
+        const hasil = determineCatch();
+        
+        statusDisplay.textContent = `🎉 Anda menangkap: ${hasil.nama}!`;
+        addCatchToHistory(hasil.nama); 
+
+        castButton.disabled = false;
+        
+    }, fishingTime);
+}
+
+// 6. Event Listener untuk tombol
+castButton.addEventListener('click', startFishing); castButton = document.getElementById('cast-button');
 const statusDisplay = document.getElementById('status');
 const catchList = document.getElementById('catch-list'); // PASTIKAN ID INI BENAR
 
