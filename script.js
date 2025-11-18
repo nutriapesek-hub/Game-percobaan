@@ -1,31 +1,57 @@
-// 1. Ambil elemen-elemen dari HTML menggunakan ID
-const countDisplay = document.getElementById('count-display');
-const decrementBtn = document.getElementById('decrement-btn');
-const incrementBtn = document.getElementById('increment-btn');
+// 1. Ambil elemen-elemen dari HTML
+const taskInput = document.getElementById('task-input');
+const addTaskBtn = document.getElementById('add-task-btn');
+const taskList = document.getElementById('task-list');
 
-// 2. Inisialisasi variabel hitungan
-let count = 0;
+// 2. Fungsi untuk menambah tugas baru
+function addTask() {
+    const taskText = taskInput.value.trim();
 
-// 3. Fungsi untuk memperbarui tampilan hitungan
-function updateDisplay() {
-    countDisplay.textContent = count;
+    // Pastikan input tidak kosong
+    if (taskText === "") {
+        alert("Mohon masukkan tugas terlebih dahulu.");
+        return;
+    }
+
+    // Buat elemen <li> baru
+    const listItem = document.createElement('li');
+    listItem.textContent = taskText;
+
+    // Buat tombol hapus
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = 'Hapus';
+    deleteBtn.className = 'delete-btn';
+    
+    // Tambahkan event listener untuk tombol hapus
+    deleteBtn.addEventListener('click', function() {
+        taskList.removeChild(listItem);
+    });
+
+    // Tambahkan event listener untuk menandai tugas selesai (klik pada <li>)
+    listItem.addEventListener('click', function(e) {
+        // Hanya toggle jika yang diklik bukan tombol hapus
+        if (e.target !== deleteBtn) {
+            listItem.classList.toggle('completed');
+        }
+    });
+
+    // Gabungkan tombol hapus ke dalam item daftar
+    listItem.appendChild(deleteBtn);
+
+    // Tambahkan item daftar ke dalam <ul>
+    taskList.appendChild(listItem);
+
+    // Kosongkan input setelah tugas ditambahkan
+    taskInput.value = "";
+    taskInput.focus();
 }
 
-// 4. Tambahkan Event Listener untuk tombol Tambah
-incrementBtn.addEventListener('click', () => {
-    count++;
-    updateDisplay();
-});
+// 3. Event Listener untuk tombol Tambah
+addTaskBtn.addEventListener('click', addTask);
 
-// 5. Tambahkan Event Listener untuk tombol Kurang
-decrementBtn.addEventListener('click', () => {
-    // Pastikan hitungan tidak turun di bawah nol (opsional)
-    if (count > 0) {
-        count--;
-        updateDisplay();
+// 4. Event Listener untuk tombol Enter di input
+taskInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        addTask();
     }
-    // Jika Anda ingin mengizinkan angka negatif, cukup gunakan: count--; updateDisplay();
 });
-
-// Panggil sekali saat dimuat untuk memastikan tampilan awal benar
-updateDisplay();
