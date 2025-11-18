@@ -3,8 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Memancing Sederhana</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Game Memancing Sederhana (Satu File)</title>
+    
+    <style>
+        /* --- KODE CSS (`style.css`) DIMULAI DI SINI --- */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #a8dadc; /* Warna air */
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: #1d3557;
+            margin-bottom: 20px;
+        }
+
+        #status {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #457b9d;
+            font-weight: bold;
+        }
+
+        #cast-button {
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            background-color: #e63946; /* Merah cerah */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #cast-button:hover:not(:disabled) {
+            background-color: #c42f3a;
+        }
+
+        #cast-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #catch-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        #catch-list li {
+            background-color: #f1faee;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            border-left: 5px solid #457b9d;
+            text-align: left;
+        }
+        /* --- KODE CSS SELESAI --- */
+    </style>
 </head>
 <body>
     <div class="container">
@@ -16,9 +86,72 @@
         
         <h2>Hasil Tangkapan:</h2>
         <ul id="catch-list">
-            </ul>
+        </ul>
     </div>
-    
-    <script src="script.js"></script>
+    <script>
+        /* --- KODE JAVASCRIPT (`script.js`) DIMULAI DI SINI --- */
+        // 1. Ambil elemen-elemen DOM
+        const castButton = document.getElementById('cast-button');
+        const statusDisplay = document.getElementById('status');
+        const catchList = document.getElementById('catch-list');
+
+        // 2. Daftar Ikan dan Peluang (Probabilitas)
+        const fishData = [
+            { nama: "🐟 Ikan Teri", peluang: 0.40 }, 
+            { nama: "🐠 Ikan Mas", peluang: 0.30 },
+            { nama: "🐡 Ikan Buntal", peluang: 0.15 },
+            { nama: "🦈 Hiu Kecil", peluang: 0.05 },
+            { nama: "👞 Sepatu Bot Tua", peluang: 0.10 } // Zonk
+        ];
+
+        // 3. Fungsi untuk menentukan hasil berdasarkan peluang
+        function determineCatch() {
+            const randomValue = Math.random();
+            let cumulativeProbability = 0;
+
+            for (const fish of fishData) {
+                cumulativeProbability += fish.peluang;
+                if (randomValue <= cumulativeProbability) {
+                    return fish;
+                }
+            }
+            return { nama: "❌ Tidak Ada Apa-apa", peluang: 0 };
+        }
+
+        // 4. Fungsi untuk menampilkan hasil tangkapan
+        function addCatchToHistory(catchName) {
+            const listItem = document.createElement('li');
+            const time = new Date().toLocaleTimeString(); 
+            listItem.textContent = `[${time}] ${catchName}`; 
+            
+            // Tambahkan item baru ke daftar tangkapan
+            catchList.prepend(listItem); 
+        }
+
+        // 5. Fungsi utama untuk memancing
+        function startFishing() {
+            // Nonaktifkan tombol
+            castButton.disabled = true;
+            statusDisplay.textContent = "⏳ Pancing dilempar... menunggu gigitan!";
+
+            const fishingTime = 3000; // Waktu tunggu 3 detik
+
+            setTimeout(() => {
+                const hasil = determineCatch();
+                
+                // Perbarui status dan hasil
+                statusDisplay.textContent = `🎉 Anda menangkap: ${hasil.nama}!`;
+                addCatchToHistory(hasil.nama); 
+
+                // Aktifkan kembali tombol
+                castButton.disabled = false;
+                
+            }, fishingTime);
+        }
+
+        // 6. Event Listener untuk tombol
+        castButton.addEventListener('click', startFishing);
+        /* --- KODE JAVASCRIPT SELESAI --- */
+    </script>
 </body>
-</html>
+    </html>
