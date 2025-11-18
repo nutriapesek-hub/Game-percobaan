@@ -1,5 +1,4 @@
 // 1. Ambil elemen-elemen DOM
-// 1. Ambil elemen-elemen DOM
 const castButton = document.getElementById('cast-button');
 const statusDisplay = document.getElementById('status');
 const catchList = document.getElementById('catch-list');
@@ -35,6 +34,27 @@ function addCatchToHistory(catchName) {
     
     catchList.prepend(listItem); 
 }
+
+// 5. Fungsi utama untuk memancing
+function startFishing() {
+    castButton.disabled = true;
+    statusDisplay.textContent = "⏳ Pancing dilempar... menunggu gigitan!";
+
+    const fishingTime = 3000; // Waktu tunggu 3 detik
+
+    setTimeout(() => {
+        const hasil = determineCatch();
+        
+        statusDisplay.textContent = `🎉 Anda menangkap: ${hasil.nama}!`;
+        addCatchToHistory(hasil.nama); 
+
+        castButton.disabled = false;
+        
+    }, fishingTime);
+}
+
+// 6. Event Listener untuk tombol
+castButton.addEventListener('click', startFishing);}
 
 // 5. Fungsi utama untuk memancing
 function startFishing() {
