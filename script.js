@@ -1,40 +1,70 @@
-// 1. Ambil elemen-elemen dari HTML
-const taskInput = document.getElementById('task-input');
-const addTaskBtn = document.getElementById('add-task-btn');
-const taskList = document.getElementById('task-list');
+// 1. Ambil elemen-elemen DOM
+const castButton = document.getElementById('cast-button');
+const statusDisplay = document.getElementById('status');
+const catchList = document.getElementById('catch-list');
 
-// 2. Fungsi untuk menambah tugas baru
-function addTask() {
-    const taskText = taskInput.value.trim();
+// 2. Daftar Ikan dan Peluang (Probabilitas)
+const fishData = [
+    { nama: "🐟 Ikan Teri", peluang: 0.40 }, // 40%
+    { nama: "🐠 Ikan Mas", peluang: 0.30 }, // 30%
+    { nama: "🐡 Ikan Buntal", peluang: 0.15 }, // 15%
+    { nama: "🦈 Hiu Kecil", peluang: 0.05 },  // 5%
+    { nama: "👞 Sepatu Bot Tua", peluang: 0.10 } // 10% - Zonk
+];
 
-    // Pastikan input tidak kosong
-    if (taskText === "") {
-        alert("Mohon masukkan tugas terlebih dahulu.");
-        return;
-    }
+// 3. Fungsi utama untuk memancing
+function startFishing() {
+    // Nonaktifkan tombol selama proses memancing
+    castButton.disabled = true;
+    statusDisplay.textContent = "⏳ Pancing dilempar... menunggu gigitan!";
 
-    // Buat elemen <li> baru
-    const listItem = document.createElement('li');
-    listItem.textContent = taskText;
+    // Simulasi waktu tunggu (misalnya, 3 detik)
+    const fishingTime = 3000; 
 
-    // Buat tombol hapus
-    const deleteBtn = document.createElement('button');
-    deleteBtn.textContent = 'Hapus';
-    deleteBtn.className = 'delete-btn';
-    
-    // Tambahkan event listener untuk tombol hapus
-    deleteBtn.addEventListener('click', function() {
-        taskList.removeChild(listItem);
-    });
+    setTimeout(() => {
+        // Tentukan hasil tangkapan
+        const hasil = determineCatch();
+        
+        // Perbarui status
+        statusDisplay.textContent = `🎉 Anda menangkap: ${hasil.nama}!`;
 
-    // Tambahkan event listener untuk menandai tugas selesai (klik pada <li>)
-    listItem.addEventListener('click', function(e) {
-        // Hanya toggle jika yang diklik bukan tombol hapus
-        if (e.target !== deleteBtn) {
-            listItem.classList.toggle('completed');
+        // Tambahkan hasil ke daftar tangkapan
+        addCatchToHistory(hasil.nama);
+
+        // Aktifkan kembali tombol
+        castButton.disabled = false;
+        
+    }, fishingTime);
+}
+
+// 4. Fungsi untuk menentukan hasil berdasarkan peluang
+function determineCatch() {
+    const randomValue = Math.random(); // Menghasilkan angka antara 0.0 hingga 1.0
+    let cumulativeProbability = 0;
+
+    for (const fish of fishData) {
+        cumulativeProbability += fish.peluang;
+        if (randomValue <= cumulativeProbability) {
+            return fish;
         }
-    });
+    }
+    // Fallback (seharusnya tidak terjadi jika total peluang = 1.0)
+    return { nama: "❌ Tidak Ada Apa-apa", peluang: 0 };
+}
 
+// 5. Fungsi untuk menampilkan hasil tangkapan
+function addCatchToHistory(catchName) {
+    const listItem = document.createElement('li');
+    // Tambahkan timestamp (opsional)
+    const time = new Date().toLocaleTimeString(); 
+    listItem.textContent = `[${time}] ${catchName}`; 
+    
+    // Tambahkan ke bagian atas daftar
+    catchList.prepend(listItem); 
+}
+
+// 6. Event Listener untuk tombol
+castButton.addEventListener('click', startFishing);
     // Gabungkan tombol hapus ke dalam item daftar
     listItem.appendChild(deleteBtn);
 
