@@ -1,40 +1,66 @@
 // 1. Ambil elemen-elemen DOM
 const castButton = document.getElementById('cast-button');
 const statusDisplay = document.getElementById('status');
-const catchList = document.getElementById('catch-list');
+const catchList = document.getElementById('catch-list'); // PASTIKAN ID INI BENAR
 
 // 2. Daftar Ikan dan Peluang (Probabilitas)
 const fishData = [
-    { nama: "🐟 Ikan Teri", peluang: 0.40 }, // 40%
-    { nama: "🐠 Ikan Mas", peluang: 0.30 }, // 30%
-    { nama: "🐡 Ikan Buntal", peluang: 0.15 }, // 15%
-    { nama: "🦈 Hiu Kecil", peluang: 0.05 },  // 5%
-    { nama: "👞 Sepatu Bot Tua", peluang: 0.10 } // 10% - Zonk
+    { nama: "🐟 Ikan Teri", peluang: 0.40 }, 
+    { nama: "🐠 Ikan Mas", peluang: 0.30 },
+    { nama: "🐡 Ikan Buntal", peluang: 0.15 },
+    { nama: "🦈 Hiu Kecil", peluang: 0.05 },
+    { nama: "👞 Sepatu Bot Tua", peluang: 0.10 }
 ];
 
-// 3. Fungsi utama untuk memancing
+// ... (Fungsi determineCatch dan variabel lainnya sama seperti sebelumnya) ...
+
+// Fungsi untuk menentukan hasil berdasarkan peluang
+function determineCatch() {
+    const randomValue = Math.random();
+    let cumulativeProbability = 0;
+
+    for (const fish of fishData) {
+        cumulativeProbability += fish.peluang;
+        if (randomValue <= cumulativeProbability) {
+            return fish;
+        }
+    }
+    return { nama: "❌ Tidak Ada Apa-apa", peluang: 0 };
+}
+
+// 4. Fungsi untuk menampilkan hasil tangkapan
+function addCatchToHistory(catchName) {
+    // 🐟 LOGIKA INI PENTING 🐟
+    const listItem = document.createElement('li');
+    const time = new Date().toLocaleTimeString(); 
+    listItem.textContent = `[${time}] ${catchName}`; 
+    
+    // Memasukkan item baru ke daftar tangkapan
+    catchList.prepend(listItem); 
+}
+
+// 5. Fungsi utama untuk memancing
 function startFishing() {
-    // Nonaktifkan tombol selama proses memancing
     castButton.disabled = true;
     statusDisplay.textContent = "⏳ Pancing dilempar... menunggu gigitan!";
 
-    // Simulasi waktu tunggu (misalnya, 3 detik)
     const fishingTime = 3000; 
 
     setTimeout(() => {
-        // Tentukan hasil tangkapan
         const hasil = determineCatch();
         
-        // Perbarui status
         statusDisplay.textContent = `🎉 Anda menangkap: ${hasil.nama}!`;
 
-        // Tambahkan hasil ke daftar tangkapan
-        addCatchToHistory(hasil.nama);
+        // PANGGILAN FUNGSI: Pastikan Anda memanggil fungsi ini
+        addCatchToHistory(hasil.nama); 
 
-        // Aktifkan kembali tombol
         castButton.disabled = false;
         
     }, fishingTime);
+}
+
+// 6. Event Listener untuk tombol
+castButton.addEventListener('click', startFishing);    }, fishingTime);
 }
 
 // 4. Fungsi untuk menentukan hasil berdasarkan peluang
