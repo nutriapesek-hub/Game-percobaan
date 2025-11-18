@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Penghitung Sederhana</title>
+    <title>To-Do List Sederhana</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Penghitung</h1>
+        <h1>Daftar Tugas Saya</h1>
         
-        <span id="count-display">0</span>
-        
-        <div class="buttons">
-            <button id="decrement-btn">Kurangi (-)</button>
-            
-            <button id="increment-btn">Tambah (+)</button>
+        <div class="input-area">
+            <input type="text" id="task-input" placeholder="Masukkan tugas baru...">
+            <button id="add-task-btn">Tambah</button>
         </div>
+        
+        <ul id="task-list">
+            </ul>
     </div>
     
     <script src="script.js"></script>
